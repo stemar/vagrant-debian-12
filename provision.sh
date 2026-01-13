@@ -2,9 +2,10 @@ echo '==> Updating Debian repositories'
 
 apt-get -q=2 update
 
+apt-get -q=2 install --reinstall tzdata &>/dev/null
 timedatectl set-timezone $TIMEZONE
 
-echo '==> Setting time zone to '$(cat /etc/timezone)
+echo '==> Setting '$(timedatectl show | grep Timezone)
 
 echo '==> Installing Linux tools'
 
