@@ -55,7 +55,7 @@ vagrant ssh
 - MariaDB and Adminer with no password for username `root`.
     - Avoid writing a password a zillion times through development.
 - Adminer served at `http://localhost:8000/adminer.php`.
-- Development-specific `php.ini` settings from `.htaccess` for all local websites.
+- Development-specific `php.ini` settings for all local websites.
 
 ---
 
@@ -84,21 +84,18 @@ Edit values in `settings.yaml`.
 - Add arrays to the `:forwarded_ports` value if necessary.
     - Ex.: Change the forwarded ports of this virtual machine to avoid port collision if you have multiple virtual machines running at the same time.
 - Change `:synced_folder` values to match your host machine pathname.
-- Edit the `:copy_files` values:
-- Edit the `:php_error_reporting` value if necessary.
+- Edit the `:copy_files` values.
 
 Edit `config` files if needed.
 
+- Add/edit lines to `bash_aliases`.
+- Edit `php.ini` values with settings that override Apache's `php.ini`.
 - Edit the `VirtualDocumentRoot` public directory value in `virtualhost.conf`.
 - Add `VirtualHost`s in `virtualhost.conf`.
-- Edit `php.ini.htaccess` values.
-- Add/edit lines to `bash_aliases`.
 
 Edit `provision.sh` if needed.
 
-- Add/edit Linux tools.
-- Add/edit PHP libraries.
-- Add anything you need.
+- Add/edit anything you need!
 
 ---
 
@@ -155,14 +152,14 @@ vagrant@debian-12:~$
 
 ### Check LAMP settings
 
-Check synchronized folders:
+#### Check synchronized folders
 
 ```bash
 ll ~/Code
 ll /vagrant
 ```
 
-Check versions:
+#### Check versions
 
 ```bash
 lsb_release -a
@@ -176,7 +173,7 @@ npm -v
 nodejs -v
 ```
 
-Check Apache configuration:
+#### Check Apache configuration
 
 ```bash
 sudo apachectl configtest
@@ -194,18 +191,31 @@ cat /etc/apache2/conf-available/adminer.conf
 sudo cat /var/log/apache2/error.log
 ```
 
-Check MariaDB databases:
+#### Check MariaDB databases
 
 ```bash
 mysql -u root
 MariaDB [(none)]> SHOW DATABASES; quit;
 ```
 
-Check PHP modules and variables:
+#### Check PHP settings
+##### Installed modules
 
 ```bash
 php -m
+```
+
+##### CLI ini settings and library settings
+
+```bash
 php -i
+```
+
+##### Apache ini settings, original and overrides
+
+```bash
+grep -Ev '^$|^;' /etc/php/$(php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;")/apache2/php.ini
+cat /var/www/php.ini
 ```
 
 ### Browse local websites
